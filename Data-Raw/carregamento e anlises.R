@@ -140,10 +140,29 @@ barplot(table(fem_idade$`Card Type`))
 table(fem_idade$Complain)
 hist(fem_idade$Balance)
 hist(Customer$Balance)
+
+
+# Clientes que cancelaram -------------------------------------------------
+
+Gender_ex <- cust_ex%>% 
+  count(Gender) %>%
+  slice_max(order_by = n, n = 10) %>% 
+  ggplot() +
+  geom_col(aes(x = Gender, y = n, fill = Gender), show.legend = FALSE) +
+  geom_label(aes(x = Gender, y = n/2, label = n)) +
+  coord_flip()+
+  labs(
+    y = "Número de clientes",
+    x = "Gênero",
+    color = "Lucro ($)",
+    title = "Clientes que saíram",
+    subtitle = "Por Gênero"
+  )
+
 hist(cust_ex$Balance)
 hist(cust_per$Balance)
-hist(cust_ex$`Satisfaction Score`)
 
+hist(cust_ex$`Satisfaction Score`)
 summary(cust_ex$`Satisfaction Score`)
 summary(cust_ex$Age)
 table(cust_ex$`Satisfaction Score`)
@@ -163,6 +182,51 @@ mean(cust_ex$CreditScore); sd(cust_ex$CreditScore)
 mean(cust_ex$`Point Earned`); sd(cust_ex$`Point Earned`)
 
 
+# Clientes que permaneceram -----------------------------------------------
+
+Gender_per <- cust_per%>% 
+  count(Gender) %>%
+  slice_max(order_by = n, n = 10) %>% 
+  ggplot() +
+  geom_col(aes(x = Gender, y = n, fill = Gender), show.legend = FALSE) +
+  geom_label(aes(x = Gender, y = n/2, label = n)) +
+  coord_flip()+
+  labs(
+    y = "Número de clientes",
+    x = "Gênero",
+    color = "Lucro ($)",
+    title = "Clientes que permaneceram",
+    subtitle = "Por Gênero"
+  )
+# Total -------------------------------------------------------------------
+
+Gender_total <- Customer%>% 
+  count(Gender) %>%
+  slice_max(order_by = n, n = 10) %>% 
+  ggplot() +
+  geom_col(aes(x = Gender, y = n, fill = Gender), show.legend = FALSE) +
+  geom_label(aes(x = Gender, y = n/2, label = n)) +
+  coord_flip()+
+  labs(
+    y = "Número de clientes",
+    x = "Gênero",
+    color = "Lucro ($)",
+    title = "Total de clientes",
+    subtitle = "Por Gênero"
+  )
+
+barplot(prop.table(table(Customer$Gender))*100)
+prop.table(table(Customer$NumOfProducts == 1))*100
+prop.table(table(Customer$IsActiveMember))*100
+prop.table(table(Customer$Complain))*100
+prop.table(table(Customer$HasCrCard))*100
+sort(prop.table(table(Customer$Tenure))*100)
+
+hist(Customer$Age)
+nrow(filter(Customer, Age > 35 & Age <55))/nrow(Customer)
+mean(Customer$EstimatedSalary); 
+mean(Customer$CreditScore); 
+mean(Customerv$`Point Earned`)
 
 # Analisando German -------------------------------------------------------
 Germany_Ex <- filter(cust_ex, Geography=="Germany")
@@ -178,4 +242,5 @@ mean(Germany_Ex$EstimatedSalary);
 mean(Germany_Ex$CreditScore); 
 mean(Germany_Ex$`Point Earned`)
 
+Gender_ex + Gender_per + Gender_total
 
