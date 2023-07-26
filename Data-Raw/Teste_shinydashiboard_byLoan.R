@@ -8,10 +8,19 @@ library(shinyWidgets)
 library(shinycssloaders)# carregar uma animação
 shiny::includeMarkdown()
 
+
+nyse <- read.csv("data/nyse.csv", stringsAsFactors = FALSE)
+nasdaq  <- read.csv("data/nasdaqcsv.csv", stringsAsFactors = FALSE)
+constituents <- read.csv("data/constituents.csv", stringsAsFactors = FALSE)
+other <- read.csv("data/other-listed.csv", stringsAsFactors = FALSE)
+sticker <- rbind(nasdaq, nyse[,c(1,2)], constituents[, c(1,2)], other[,c(1,2)])
+sticker <- sticker[duplicated(sticker$symbol),]
+sticker$choices <- paste0(sticker$symbol, ": ",sticker$name)
+
 ui = dashboardPage(
   skin = "midnight",
-  header = source("header.R", local = TRUE)$value,
-  sidebar = source("sidebar.R", local = TRUE)$value,
+  header = source("/home/rosana/Documents/Meus_Projetos/shiny/Churn Clientes/Churn-de-clientes/Data-Raw/header.R", local = TRUE)$value,
+  sidebar = source("/home/rosana/Documents/Meus_Projetos/shiny/Churn Clientes/Churn-de-clientes/Data-Raw/sidebar.R", local = TRUE)$value,
   body = dashboardBody(
     shinyjs::useShinyjs(),
     shinyjs::extendShinyjs(text = jsRefreshCode, functions = "refresh"), 

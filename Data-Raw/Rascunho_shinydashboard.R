@@ -9,7 +9,7 @@ library(shinyWidgets)
 library(shinycssloaders)# carregar uma animação
 shiny::includeMarkdown()#incluir arquivo markdown
 
-dados <-read_csv("Data-Raw/Customer-Churn-Records.csv")
+
 
 nyse <- read.csv("data/nyse.csv", stringsAsFactors = FALSE)
 nasdaq  <- read.csv("data/nasdaqcsv.csv", stringsAsFactors = FALSE)
@@ -21,97 +21,61 @@ sticker$choices <- paste0(sticker$symbol, ": ",sticker$name)
 
 ui <- dashboardPage(
   skin =c("midnight"),
-  dashboardHeader(
-    tags$li(
-      class = "dropdown",
-      tags$style(".main-header {max-height: 38px}"),
-      tags$style(".main-header .logo {height: 38px}")
-    ),
-    title = div(
-      span(
-        img(
-          src = "stock_header.png",
-          height = 40,
-          width = "20%"
-        ),
-        "Stock Market Forecasting"
-      ),
-      align = "left",
-      width = "100%",
-      style = "padding-right:0px;"
-    ),
-    titleWidth = 310
-  ),
+  dashboardHeader(title = "Bank Customer Churn",
+      titleWidth = 310),
   dashboardSidebar(
-    width = 310,
-    div(class = "inlay", style = "height:10px;;"),
-    div(style = "overflow: visible;width:inherit;",
-        sidebarMenu(
-          menuItem(
-            "Stock Symbols Selection",
-            tabName = "stock_symbol",
-            icon = icon("dashboard"),
-            hr(),
-            pickerInput(
-              inputId = "stickers",
-              label = "Select Stock Symbols: ",
-              choices = sticker$symbol,
-              multiple = TRUE,
-              selected = c("GOOGL", "FB", "AMZN", "AAPL"),
-              options = list(
-                `max-options` = 8,
-                `actions-box` = TRUE,
-                `live-search` = TRUE,
-                `virtual-scroll` = 10,
-                `multiple-separator` = "\n",
-                size = 10
-              ),
-              choicesOpt = list(content = stringr::str_trunc(sticker$choices, width = 30))
-            ),
-            dateInput(
-              "dt_frome",
-              "Date from:",
-              value = Sys.Date() - 720,
-              max = Sys.Date() - 360
-            ),
-            dateInput("dt_to", "Date to:", value = Sys.Date(), min = Sys.Date() -
-                        360),
-            actionButton("submit", "Get Symbols", icon("paper-plane"),
-                         style = "color: #fff; background-color: #32907c; border-color: #32907c"),
-            br(),
-            hr()
-          )
-        ))
-  ),
-  dashboardBody(
-    shinyjs::useShinyjs(),
-    shinyjs::extendShinyjs(text = jsRefreshCode, functions = "refresh"), 
-    shinyalert::useShinyalert(),
-    br(),
-    fluidRow( uiOutput("boxes")),br(),
-    fluidRow(column(width = 6,uiOutput("plot")),
-             column(width = 6,uiOutput("plot_area"))),
-    fluidRow(column(width = 10, offset = 1,uiOutput("plot_line")))
-    
+    sidebarMenu(
+    menuItem("Churn por País", tabName = "pagina1",icon = icon("map")),
+    menuItem("Clientes", tabName = "pagina2", icon = icon("user"))
   )
+),
+dashboardBody(
+    fluidRow(
+    box(
+      title = "Histograma",
+      status = "primary",
+      solidHeader = TRUE,
+      collapsible = TRUE,
+      
+    )
+  ),
+  
+  fluidRow(
+    box(
+      title = "Inputs",
+      status = "warning",
+      solidHeader = TRUE,
+    )
+  )
+),tabItems(
+  tabItem(tabName = "pagina1", ),
+  tabItem(tabName = "pagina2", )
+)
 )
 
-server <- function(input, output) {
-  set.seed(122)
-  histdata <- rnorm(500)
-  
-  output$plot <- renderPlot({
-    data <- histdata[seq_len(input$slider)]
-    hist(data)
+
+
+
+server <- function(input, output, session) {
+  dados <- readr::read_csv("Data-Raw/Customer-Churn-Records.csv")
+  output$res <- renderText({
+    req(input$sidebarItemExpanded)
+    paste("Expanded menuItem:", input$sidebarItemExpanded)
   })
 }
 
+
 shinyApp(ui, server)
 
+
+
+selectInput(
+  inputId = "variavel",
+  label = "Selecione uma variável",
+  choices = names(mtcars)
+),
+plotOutput(outputId = "histograma")
+)
 #icon("credit-card")
 #icon("venus-mars")
 #icon("dollar")
-shinyjs::useShinyjs()
-shinyjs::extendShinyjs(text = jsRefreshCode, functions = "refresh")
-shinyalert::useShinyalert(
-  
