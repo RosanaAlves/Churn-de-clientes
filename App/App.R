@@ -9,14 +9,31 @@ library(shinycssloaders)# carregar uma animação
 #shiny::includeMarkdown()
 
 ui <- dashboardPage(
-      skin =c("midnight"),
+       skin =c("midnight"),
         dashboardHeader(title = "Bank Customer Churn",
                   titleWidth = 230),
         dashboardSidebar(  
           sidebarMenu(
-            menuItem("Churn by country", tabName = "pagina1",icon = icon("map")))),
-        dashboardBody(dashbody)
+            menuItem("Churn by country", tabName = "pagina1",icon = icon("map"))),
+        dashboardBody(
+                      tabItems(
+              tabItem(tabName = "pagina1", 
+                      fluidRow(
+                        valueBox(round(mean(dados$CreditScore)), "Mean Credit Score", icon = icon("credit-card")),
+                        valueBox(round(mean(dados$CreditScore)), "Mean Credit Score", icon = icon("credit-card")),
+                        valueBox(round(mean(dados$CreditScore)), "Mean Credit Score", icon = icon("credit-card"))),
+                      fluidRow( 
+                        box(width = 4,
+                            title = "Barplot Gender", solidHeader = TRUE,
+                            plotOutput("plot1")
+                        )),
+                      
+                    
+              )
+            )
+          )
         )
+        
 
 
 server <- function(input, output, session) {
