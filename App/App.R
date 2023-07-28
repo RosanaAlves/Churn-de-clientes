@@ -1,22 +1,19 @@
-#require(quantmod)
+library(tidyverse)
+library(dplyr)
 library(readr)
 library(shiny)
 library(shinydashboard)
-library(shinydashboardPlus)
-library(shinyjs)
-library(shinyWidgets)
-library(shinycssloaders)# carregar uma animação
-#shiny::includeMarkdown()
 
-dados <- readr::read_csv("App/Customer-Churn-Records.csv")
+link <- "https://raw.githubusercontent.com/RosanaAlves/Churn-de-clientes/main/Data-Raw/Customer-Churn-Records.csv"
+
+dados <- readr::read_csv(link)
 pais <- c(unique(dados$Geography))
   
 # Selecionar a base coom clientes que sairam ou nao
 
 
 ui <- dashboardPage(
-       skin =c("midnight"),
-        dashboardHeader(title = "Bank Customer",
+         dashboardHeader(title = "Bank Customer",
                   titleWidth = 230),
         dashboardSidebar(  
           sidebarMenu(
