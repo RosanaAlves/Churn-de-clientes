@@ -1,0 +1,12 @@
+name: Churn_Clientes
+title: Churn_Clientes
+username: rosanaalves
+account: rosanaalves
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9520118
+bundleId: 7504789
+url: https://rosanaalves.shinyapps.io/Churn_Clientes/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

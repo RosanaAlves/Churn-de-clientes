@@ -8,9 +8,9 @@ library(shinyWidgets)
 library(shinycssloaders)# carregar uma animação
 #shiny::includeMarkdown()
 
-dados <- readr::read_csv("Data-Raw/Customer-Churn-Records.csv")
+dados <- readr::read_csv("App/Customer-Churn-Records.csv")
 pais <- c(unique(dados$Geography))
-
+  
 # Selecionar a base coom clientes que sairam ou nao
 
 
