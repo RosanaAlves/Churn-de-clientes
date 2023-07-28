@@ -26,7 +26,8 @@ ui <- fluidPage(
        valueBoxOutput('Salary'),
        valueBoxOutput('Score'),
        valueBoxOutput('Earned'),
-       valueBoxOutput('Complain')
+       valueBoxOutput('Complain'),
+       valueBoxOutput('ComplainExited')
       ),
     fluidRow(
         plotOutput(outputId = "Age"),
@@ -66,6 +67,11 @@ server <- function(input, output, session) {
                    filter(Geography == input$pais_A & Complain == '1') %>%
                    count(Complain))[2], icon = icon("volume-up"), "Count Complain",  color = "yellow")
     })
+  output$ComplainExited <- renderValueBox({
+    valueBox((dados %>%
+                filter(Geography == input$pais_A & Complain == '1' & Exited=="1") %>%
+                count(Complain))[2], icon = icon("volume-up"), "Count Complain and Exited",  color = "yellow")
+  })
   
   output$Age <- renderPlot({
     req(input$pais_A)
